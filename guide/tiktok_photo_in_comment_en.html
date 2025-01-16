@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>QuadLegacy</title>
+        <style>
+            body {
+                background-image: url("../img/wallpapers/windows7_1536_960.jpg");
+                color: black; /* Цвет текста */
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                height: 100vh;
+                overflow: hidden;
+                background-repeat: no-repeat; /* Отключаем повторение */
+    background-size: 100% 100%; /* Растягиваем на 100% ширины и высоты */
+    background-position: center; /* Центрируем изображение по горизонтали и вертикали */
+    background-attachment: fixed; /* Фиксируем фон при прокрутке */
+            }
+            .header {
+                padding: 20px;
+                text-align: center;
+                background-color: #2c2c2c; /* Серый фон для заголовка */
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+                position: relative;
+                z-index: 2; /* Поверх содержимого */
+            }
+            .header h1 {
+                margin: 0;
+                padding-left: 20px;
+            }
+            .header img {
+                height: 40px; /* Установлен размер изображения по высоте текста */
+                margin-right: 20px;
+            }
+            .container {
+                display: flex;
+                width: 90%;
+                height: calc(80% - 40px); /* Учитываем высоту заголовка */
+                margin-top: 20px; /* Отступ снизу от заголовка */
+                gap: 20px; /* Пробел между блоками */
+                box-sizing: border-box;
+                overflow: hidden;
+            }
+            .info-box {
+                flex: 1;
+                padding: 0;
+                background-color: #2c2c2c;
+                display: flex;
+                flex-direction: column;
+                box-sizing: border-box;
+                overflow: auto; /* Позволяет вертикальную прокрутку при необходимости */
+                border-radius: 10px; /* Закругление углов окон */
+                background-image: url(https://i.ibb.co/CwY2mcY/2.png);
+                color: black;
+                background-size: cover; /* Растягивание изображения на весь блок */
+                background-position: center; /* Выравнивание изображения по центру */
+                background-repeat: no-repeat; /* Отключение повторения изображения */
+            }
+            .info-box .taskbar {
+                height: 30px;
+                background: #0078d7; /* Цвет заголовка окна */
+                color: black;
+                font-weight: bold;
+                display: flex;
+                align-items: center;
+                padding: 0 10px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+                margin-bottom: 0; /* Убираем отступ снизу */
+                z-index: 1; /* Поверх содержимого */
+                flex-shrink: 0; /* Не позволяет заголовку уменьшаться */
+                border-radius: 10px 10px 0 0; /* Закругление только верхних углов */
+                background-image: url(https://i.ibb.co/CwY2mcY/2.png);
+            }
+            .info-left {
+                margin-right: 1px; /* Отступ между левым и правым блоком */
+            }
+            .info-right {
+                margin-left: 1px; /* Отступ между левым и правым блоком */
+            }
+            .taskbar-bottom {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 5%; /* Высота таскбара */
+                background: rgba(0, 123, 255, 0.6); /* Голубой с прозрачностью */
+                display: flex;
+                align-items: center;
+                justify-content: flex-start; /* Выравнивание содержимого по левому краю */
+                box-sizing: border-box;
+                z-index: 1000; /* Убедиться, что таскбар выше других элементов */
+                padding: 0 10px; /* Отступы от края */
+            }
+            .taskbar-bottom .start-button {
+                width: 40px; /* Ширина кнопки */
+                height: 40px; /* Высота кнопки */
+                background: url('https://i.postimg.cc/Wb9J2HC5/image.jpg') no-repeat center center; /* Изображение кнопки */
+                background-size: cover; /* Чтобы изображение полностью заполняло кнопку */
+                border: none;
+                cursor: pointer;
+                background-color: transparent; /* Прозрачный фон для кнопки */
+                margin-left: 0; /* Убираем отступ слева */
+            }
+            .taskbar-bottom .start-button:focus {
+                outline: none; /* Убрать фокусное обрамление */
+            }
+            .info-box p {
+                margin: 0;
+                padding: 20px; /* Добавляем отступы для текста */
+                
+            }
+            .link-section {
+                padding: 20px; /* Отступы для текста ссылки */
+                background-color: #121212; /* Темный фон для текста */
+                width: 90%;
+                margin-top: 20px;
+                display: flex;
+                justify-content: flex-start; /* Выравнивание содержимого влево */
+                align-items: center;
+                box-sizing: border-box;
+            }
+            .link-section a {
+                color: #1e90ff; /* Цвет текста ссылки */
+                text-decoration: none; /* Убираем подчеркивание */
+                font-weight: bold;
+                display: inline-flex; /* Используем inline-flex для центрирования содержимого */
+                align-items: center; /* Центрируем по вертикали */
+                background-color: #2c2c2c; /* Цвет фона кнопки */
+                border-radius: 5px;
+                padding: 10px 20px; /* Добавляем отступы внутри кнопки */
+                margin-left: 20px; /* Отступ слева от кнопки */
+            }
+            .link-section a:hover {
+                background-color: #1e1e1e; /* Цвет фона при наведении */
+            }
+            h1 {
+                padding-left: 10px; /* Внутренний отступ слева */
+            }
+            h2 {
+                padding-left: 10px; /* Внутренний отступ слева */
+            }
+            h3 {
+                padding-left: 10px; /* Внутренний отступ слева */
+            }
+            a {
+                text-decoration: none;
+                color: black;
+            }
+            cmd {
+                color: #660000;
+            }
+            
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <h1><a href="https://qlegacy.github.io/site/">QLegacy Web Site</a></h1>
+        </div>
+        <div class="container">
+            <div class="info-box info-left">
+                <div class="taskbar">
+                    
+                </div>
+                <h1>QuadLegacy Web Site</h1>
+                <p style="font-size: 125%;">Article: "How to post a photo in a TikTok comment?"<img src="../img/emojies/heavy-black-heart_2764.png" alt="IOS_10_3_red_heart" height="8%"> )</p>
+                <p>read on the right</p>    
+            </div>
+            <div class="info-box info-right">
+                <div class="taskbar">
+                    <span>healthly info</span>
+                    <div class="buttons">
+                        <div class="button close"></div>
+                        <div class="button minimize"></div>
+                        <div class="button maximize"></div>
+                    </div>
+                </div>
+                <h1>Guide: Posting Photos in TikTok Comments</h1>
+                <p>Hello everyone, I think it's no secret that you've all seen how someone posts photos on TikTok, there were even 18+ there... anyway, you yourself want a button like this:</p>
+                <br>
+                <img src="../img/pics/photo_comment_pi.png" alt="" style="margin-left: 2%;" height="30%" width="35%">
+                <br>
+                <p>button to send a picture via comments in tiktok</p>
+                <h2>So what needs to be done?</h2>
+                <h3>Method 1 (tested by me): </h3>
+                <img src="../img/pics/1stage.jpg" alt="">
+                <br>
+                <img src="../img/pics/2stage.jpg" alt="">
+                <br>
+                <img src="../img/pics/3stage.jpg" alt="">
+                <br>
+                <img src="../img/pics/4stage.jpg" alt="">
+                <br>
+                <br>
+                <p>create a new account and now you can own the photos, go throw trollfaces :laugh:</p>
+                <h2>Method 2. Which doesn't work for me.</h2>
+                <p>This method does not require a new account, what is needed: in the settings find the item "region" and stay in Egypt for 30 days (a month), which can be done via VPN, but I can't do it because I don't have time for it. If anyone succeeds, write somewhere =)</p>
+            </div>
+        </div>
+        <div class="taskbar-bottom">
+            <button class="start-button"></button>
+            <!-- Здесь можно добавить другие элементы для нижней панели -->
+        </div>
+    </body>
+    </html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Рабочий стол DWM</title>
+    <script src="js/CursorVidelit.js"></script>
+    <script src="js/openNewWindows.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: url('img/wallpapers/windows7_1536_960.jpg') no-repeat center center;
+            background-size: cover;
+            background-attachment: fixed;
+            height: 100%;
+            margin: 0;
+            user-select: none;
+        }
+        body, html {
+            height: 100%;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        #desktop-area {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: calc(100% - 5vh); /* Занимает всё пространство, за исключением таскбара */
+            z-index: 1; /* Этот элемент должен быть ниже, чем иконки */
+        }
+        #desktop {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+            position: relative;
+            z-index: 10; /* Иконки находятся выше */
+        }
+        .icon {
+            width: 100px;
+            height: 100px;
+            margin: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            color: white;
+            cursor: pointer;
+        }
+        .icon img {
+            width: 64px;
+            height: 64px;
+        }
+        .window {
+            display: none;
+            position: absolute;
+            width: 600px;
+            height: 400px;
+            background-color: white;
+            border: 2px solid black;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+            overflow: hidden;
+        }
+        .title-bar {
+            width: 100%;
+            height: 30px;
+            background-color: #0078d7;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: move; /* Указатель для перетаскивания */
+            user-select: none; /* Запрет выделения текста */
+        }
+        .window iframe {
+            width: 100%;
+            height: 10%; /* Оставляем место для заголовка */
+        }
+        .window-controls {
+            display: flex;
+            height: 5;
+        }
+        .window-btn {
+            background-color: #0078d7;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+        /* Ярлыки (иконки) */
+#taskbar-icons {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    justify-content: space-around;
+    background-color: #333;
+    z-index: 1; /* Установим ярлыкам низкий z-index */
+}
+
+/* Окна */
+.window {
+    position: fixed;
+    top: 50px; /* Примерно на 50px ниже верхней части экрана */
+    left: 50px;
+    width: 400px;
+    height: 300px;
+    background-color: white;
+    border: 1px solid #ccc;
+    z-index: 10; /* Окна должны быть выше, поэтому z-index больше */
+    display: none; /* По умолчанию окна скрыты */
+}
+
+.window iframe {
+    width: 100%;
+    height: 100%;
+}
+        /* Всплывающее окно меню "Пуск" */
+#start-menu-popup {
+    display: none;
+    position: absolute;
+    bottom: 5vh; /* Над таскбаром */
+    left: 10px;
+    width: 300px;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 8px; /* Округленные углы */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    z-index: 1000; /* Поверх других элементов */
+    overflow: hidden;
+}
+
+/* iframe внутри окна */
+#start-menu-popup iframe {
+    width: 100%;
+    height: 400px; /* Фиксированная высота */
+    border: none;
+    overflow: auto; /* Прокрутка содержимого */
+}
+
+/* Стили для таскбара */
+#taskbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5vh;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 0 10px;
+            z-index: 20; /* Задаем слой выше контента */
+        }
+iframe {
+    background: transparent; /* Сделать сам iframe прозрачным */
+    border: none; /* Убрать рамку */
+}
+
+#start-menu {
+            background-color: #0078d7;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+        .resizable {
+            position: absolute;
+            border: 2px solid rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.1);
+            cursor: nwse-resize;
+            z-index: 0; /* Элемент будет ниже всех других */
+        }
+    </style>
+</head>
+<body>
+    <div id="desktop-area">
+    <div id="desktop">
+        <div class="icon" id="icon1" data-app="Мой компьютер">
+            <img src="img/ico/pc.png" alt="Мой компьютер">
+            <span>Мой компьютер</span>
+        </div>
+        <div class="icon" id="icon2" data-app="Ссылки.html">
+            <img src="img/ico/html.png" alt="Ссылки.html">
+            <span>Ссылки.html</span>
+        </div>
+        <div class="icon" id="icon3" data-app="QuadLegacy Game.htm">
+            <img src="img/ico/game.png" alt="Game.htm">
+            <span>QuadLegacy Game.htm</span>
+        </div>
+        <div class="icon" id="icon4" data-app="Internet Explorer 11">
+            <img src="img/ico/html.png" alt="IE11.shortcut">
+            <span>Internet Explorer 11</span>
+        </div>
+    </div>
+</div>
+
+    <div id="taskbar">
+        <button id="start-menu">Пуск</button>
+        <div id="taskbar-icons"></div>
+    </div>
+    <div id="start-menu-popup">
+        <iframe src="pages/explorer_menu.html" style="filter: alpha(opacity=30); /*for IE*/
+        " frameborder="0" ></iframe>
+    </div>
+
+    <div class="window" id="window1">
+        <div class="title-bar" id="title-bar1">
+            <span>Мой компьютер</span>
+            <div class="window-controls">
+                <button class="window-btn" id="minimize1">Свернуть</button>
+                <button class="window-btn" id="maximize1">Развернуть</button>
+                <button class="window-btn" id="close1">Закрыть</button>
+            </div>
+        </div>
+        <iframe src="pages/explorer.html" frameborder="0"></iframe>
+    </div>
+
+    <div class="window" id="window2">
+        <div class="title-bar" id="title-bar2">
+            <span>Ссылки.html</span>
+            <div class="window-controls">
+                <button class="window-btn" id="minimize2">Свернуть</button>
+                <button class="window-btn" id="maximize2">Развернуть</button>
+                <button class="window-btn" id="close2">Закрыть</button>
+            </div>
+        </div>
+        <iframe src="pages/links.html" frameborder="0"></iframe>
+    </div>
+
+    <div class="window" id="window3">
+        <div class="title-bar" id="title-bar3">
+            <span>QuadLegacy Game.htm</span>
+            <div class="window-controls">
+                <button class="window-btn" id="minimize3">Свернуть</button>
+                <button class="window-btn" id="maximize3">Развернуть</button>
+                <button class="window-btn" id="close3">Закрыть</button>
+            </div>
+        </div>
+        <iframe src="pages/game.html" frameborder="0"></iframe>
+    </div>
+
+    <div class="window" id="window4">
+        <div class="title-bar" id="title-bar4">
+            <span>Internet Explorer 11</span>
+            <div class="window-controls">
+                <button class="window-btn" id="minimize4">Свернуть</button>
+                <button class="window-btn" id="maximize4">Развернуть</button>
+                <button class="window-btn" id="close4">Закрыть</button>
+            </div>
+        </div>
+        <iframe src="pages/browser.html" frameborder="0"></iframe>
+    </div>
+
+<script>
+    const startMenuBtn = document.getElementById('start-menu');
+    const startMenuPopup = document.getElementById('start-menu-popup');
+
+    // Показываем/скрываем меню при нажатии на "Пуск"
+    startMenuBtn.addEventListener('click', () => {
+        if (startMenuPopup.style.display === 'block') {
+            startMenuPopup.style.display = 'none';
+        } else {
+            startMenuPopup.style.display = 'block';
+        }
+    });
+
+    // Скрываем меню при нажатии вне его
+    document.addEventListener('click', (event) => {
+        if (!startMenuPopup.contains(event.target) && event.target !== startMenuBtn) {
+            startMenuPopup.style.display = 'none';
+        }
+    });
+
+    // Выгрузка содержимого iframe при закрытии окна
+    windows.forEach((windowEl, index) => {
+        const closeBtn = document.getElementById(`close${index + 1}`);
+        closeBtn.addEventListener('click', () => {
+            const iframe = windowEl.querySelector('iframe');
+            iframe.src = ''; // Сбрасываем содержимое iframe
+        });
+    });
+</script>
+<script>
+    // Функция для закрытия родительской страницы
+    function closeParentPage() {
+        window.close(); // Пытается закрыть страницу
+    }
+
+    // Слушаем сообщение от iframe
+    window.addEventListener("message", (event) => {
+        if (event.data === "close-page") {
+            closeParentPage();
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>explorer.exe.activity.start_menu</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            height: 100vh;
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            overflow: hidden;
+            background-image: url(../img/wallpapers/part_windows7.png);
+            background-repeat: no-repeat;
+            background-size:contain;
+            background-position: 12px, 0px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            margin-left: 0;
+            height: 100%;
+        }
+
+        .left_btns {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            height: 100%;
+        }
+
+        .left_btns div {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .left_btns div:hover {
+            background-color: #333;
+        }
+
+        .left_btns i {
+            font-size: 20px;
+            color: #ffffff;
+        }
+
+        .left_btns p {
+            font-size: 16px;
+            color: #cccccc;
+            display: none;
+        }
+
+        .detailes_button:hover ~ div p {
+            display: block;
+        }
+
+        .detailes_button {
+            align-self: flex-start;
+            margin-bottom: auto;
+        }
+
+        .detailes_button i {
+            font-size: 24px;
+        }
+
+        .shutdown_btn {
+            margin-top: 20px;
+            background-color: #c62828;
+            color: #ffffff;
+        }
+
+        .shutdown_btn:hover {
+            background-color: #b71c1c;
+        }
+        /* Стиль для iframe */
+#start-menu-popup iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: transparent; /* Делаем фон прозрачным, чтобы использовать фон родительской страницы */
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left_btns">
+            <!-- Button: More Details -->
+            <div class="detailes_button">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+
+            <!-- User Icon -->
+            <div class="user-ico-btn">
+                <i class="fa-solid fa-user"></i>
+                <p>User</p>
+            </div>
+
+            <!-- Open Documents Icon -->
+            <div class="open-documents-icon">
+                <i class="fa-regular fa-file"></i>
+                <p>Документы</p>
+            </div>
+
+            <!-- Open Photos Icon -->
+            <div class="open-photos-icon">
+                <i class="fa-solid fa-photo-film"></i>
+                <p>Фотографии</p>
+            </div>
+
+            <!-- Settings Button -->
+            <div class="setting_button">
+                <i class="fa-solid fa-gear"></i>
+                <p>Настройки</p>
+            </div>
+
+            <!-- Shutdown Button -->
+            <button class="shutdown_btn" onclick="closePage()">
+                <i class="fa-solid fa-power-off"></i>
+                <p>Выключение</p>
+            </button>
+        </div>
+    </div>
+    <script>
+        function closePage() {
+            window.parent.postMessage("closeIframe", "*");
+        }
+    </script>
+    <script>
+        document.getElementById("close-button").addEventListener("click", () => {
+            // Отправляем сообщение родительской странице
+            window.parent.postMessage("close-page", "*");
+        });
+    </script>
+</body>
+</html>
